@@ -20,10 +20,11 @@ const prompt = promptInitializer();
 
 type ContentChangedCallbackOption = 'identical' | 'changed' | 'new' | null;
 
-type Options = {
+export type Options = {
   upgrade?: boolean;
   force?: boolean;
   displayName?: string;
+  packageName?: string;
   ignorePaths?: string[];
 };
 
@@ -79,7 +80,7 @@ function copyProjectTemplateAndReplace(
 
     const relativeFilePath = translateFilePath(path.relative(srcPath, absoluteSrcFilePath))
       .replace(/HelloWorld/g, newProjectName)
-      .replace(/helloworld/g, newProjectName.toLowerCase());
+      .replace(/com\/helloworld/g, options.packageName || newProjectName.toLowerCase());
 
     // Templates may contain files that we don't want to copy.
     // Examples:
@@ -106,7 +107,8 @@ function copyProjectTemplateAndReplace(
       {
         'Hello App Display Name': options.displayName || newProjectName,
         HelloWorld: newProjectName,
-        helloworld: newProjectName.toLowerCase(),
+        'com.helloworld': options.packageName || `com.${newProjectName.toLowerCase()}`,
+        'PRODUCT_BUNDLE_IDENTIFIER = "(.*)"': `PRODUCT_BUNDLE_IDENTIFIER = "${options.packageName || newProjectName}"`
       },
       contentChangedCallback,
     );

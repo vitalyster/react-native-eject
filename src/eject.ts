@@ -14,7 +14,7 @@ import fs from 'fs';
 import semver from 'semver';
 import { logger } from '@react-native-community/cli-tools';
 
-import copyProjectTemplateAndReplace from './copyProjectTemplateAndReplace';
+import copyProjectTemplateAndReplace, { Options } from './copyProjectTemplateAndReplace';
 
 /**
  * The eject command re-creates the `android` and `ios` native folders. Because native code can be
@@ -25,6 +25,8 @@ import copyProjectTemplateAndReplace from './copyProjectTemplateAndReplace';
  *
  * - `name` - The short name used for the project, should be TitleCase
  * - `displayName` - The app's name on the home screen
+ * 
+ * This command will use `name` from `package.json` as a package name for Android and iOS apps.
  */
 
 const pkgJson = require(path.resolve('package.json'));
@@ -105,7 +107,7 @@ function eject() {
     process.exit(1);
   }
 
-  const templateOptions = { displayName };
+  const templateOptions: Options = { displayName, packageName: pkgJson.name };
 
   if (!doesIOSExist) {
     logger.info('Generating the iOS folder.');
