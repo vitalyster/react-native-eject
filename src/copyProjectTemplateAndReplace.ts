@@ -80,7 +80,7 @@ function copyProjectTemplateAndReplace(
 
     const relativeFilePath = translateFilePath(path.relative(srcPath, absoluteSrcFilePath))
       .replace(/HelloWorld/g, newProjectName)
-      .replace(/com\/helloworld/g, options.packageName || newProjectName.toLowerCase());
+      .replace(/com\/helloworld/g, options.packageName || `com/${newProjectName.toLowerCase()}`);
 
     // Templates may contain files that we don't want to copy.
     // Examples:
